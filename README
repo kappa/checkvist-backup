@@ -1,0 +1,14 @@
+This is a simple backup tool for Checkvist.com
+
+It requires perl 5.10, Archive::Tar, WebService::Simple and uni::perl.
+
+Usage:
+    checkvist_backup.pl --login <login> --remotekey <remotekey> [--output <output dir>]
+	
+You can obtain your remote key on your Checkvist profile page.
+
+The tool creates a checkvist.tar.bz2 in the specified output directiry
+(default to current) containing all your checklists in OPML format and
+a metadata database content.json which describes the checklists.
+
+OPML lists may be imported back into checkvist.com using Import tool.
