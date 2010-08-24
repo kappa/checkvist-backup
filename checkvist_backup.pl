@@ -40,7 +40,6 @@ for my $list (@{$lists_res->parse_response}) {
         encode('utf-8', $data));
 }
 
-$tar->add_data(encode('utf-8', 'content.json'),
-    encode('utf-8', $lists_res->content));
+$tar->add_data('content.json', encode('utf-8', $lists_res->content));
 
 $tar->write("$output_dir/checkvist.tar.bz2", COMPRESS_BZIP);
