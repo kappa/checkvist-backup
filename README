@@ -9,7 +9,8 @@ You can obtain your remote key on your Checkvist profile page.
 
 The tool creates a checkvist.tar.bz2 in the specified output directiry
 (defaults to current) containing all your checklists in OPML format and
-a metadata database content.json which describes the checklists.
+two metadata databases content.json and content_archived.json which
+describe your checklists.
 
 OPML lists may be imported back into checkvist.com using Import tool
 in web interface.

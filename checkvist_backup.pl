@@ -24,10 +24,13 @@ my $chv = WebService::Simple->new(
 $chv->credentials('checkvist.com:80', 'Application', $login,
     $remotekey);
 
-my $lists_res = $chv->get('checklists.json');
+my $lists_res       = $chv->get('checklists.json');
+my $lists_res_arc   = $chv->get('checklists.json',
+    { archived => 'true' });
 
 my $tar = Archive::Tar->new();
-for my $list (@{$lists_res->parse_response}) {
+for my $list (@{$lists_res->parse_response},
+                @{$lists_res_arc->parse_response}) {
     say "Fetching $list->{name}";
     my $data = $chv->get("checklists/$list->{id}.opml", {
             export_status   => 'true',
@@ -41,5 +44,6 @@ for my $list (@{$lists_res->parse_response}) {
 }
 
 $tar->add_data('content.json', encode('utf-8', $lists_res->content));
+$tar->add_data('content_archived.json', encode('utf-8', $lists_res_arc->content));
 
 $tar->write("$output_dir/checkvist.tar.bz2", COMPRESS_BZIP);
