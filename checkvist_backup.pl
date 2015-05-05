@@ -18,10 +18,10 @@ unless ($login && $remotekey) {
 $output_dir //= '.';
 
 my $chv = WebService::Simple->new(
-    base_url    => 'http://checkvist.com/',
+    base_url    => 'https://checkvist.com/',
     response_parser => 'JSON',
 );
-$chv->credentials('checkvist.com:80', 'Application', $login,
+$chv->credentials('checkvist.com:443', 'Application', $login,
     $remotekey);
 
 my $lists_res       = $chv->get('checklists.json');
