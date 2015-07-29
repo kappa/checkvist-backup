@@ -3,7 +3,7 @@ This is a simple backup tool for Checkvist.com
 It requires perl 5.10, Archive::Tar, WebService::Simple and uni::perl.
 
 Usage:
-    checkvist_backup.pl --login <login> --remotekey <remotekey> [--output <output dir>]
+    checkvist_backup.pl --login <login> --remotekey <remotekey> [--output <output dir>] [--nolog] [--date]
 	
 You can obtain your remote key on your Checkvist profile page.
 

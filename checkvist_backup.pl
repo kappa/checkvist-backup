@@ -6,10 +6,12 @@ use Archive::Tar;
 use Encode;
 use Getopt::Long;
 
-my ($login, $remotekey, $output_dir);
+use POSIX qw(strftime);
+
+my ($login, $remotekey, $output_dir, $put_date_in_file_name, $no_log);
 
 GetOptions('login=s' => \$login, 'remotekey=s' => \$remotekey,
-    'output=s' => \$output_dir);
+    'output=s' => \$output_dir, 'date' => \$put_date_in_file_name, 'nolog' => \$no_log);
 
 unless ($login && $remotekey) {
     die "Usage: $0 --login <login> --remotekey <remotekey> [--output <output dir>]\n\nObtain your remote key on your Checkvist profile page\n";
@@ -31,7 +33,9 @@ my $lists_res_arc   = $chv->get('checklists.json',
 my $tar = Archive::Tar->new();
 for my $list (@{$lists_res->parse_response},
                 @{$lists_res_arc->parse_response}) {
-    say "Fetching $list->{name}";
+    if (!$no_log) {
+        say "Fetching $list->{name}";
+    }
     my $data = $chv->get("checklists/$list->{id}.opml", {
             export_status   => 'true',
             export_notes    => 'true',
@@ -46,4 +50,9 @@ for my $list (@{$lists_res->parse_response},
 $tar->add_data('content.json', encode('utf-8', $lists_res->content));
 $tar->add_data('content_archived.json', encode('utf-8', $lists_res_arc->content));
 
-$tar->write("$output_dir/checkvist.tar.bz2", COMPRESS_BZIP);
+if ($put_date_in_file_name) {
+    my $date = strftime "%d-%m-%Y", localtime;
+    $tar->write("$output_dir/checkvist-$date.tar.bz2", COMPRESS_BZIP);
+} else {
+    $tar->write("$output_dir/checkvist.tar.bz2", COMPRESS_BZIP);
+}
