@@ -6,10 +6,11 @@ use Archive::Tar;
 use Encode;
 use Getopt::Long;
 
-my ($login, $remotekey, $output_dir);
+
+my ($login, $remotekey, $output_dir, $no_log);
 
 GetOptions('login=s' => \$login, 'remotekey=s' => \$remotekey,
-    'output=s' => \$output_dir);
+    'output=s' => \$output_dir, 'nolog' => \$no_log);
 
 unless ($login && $remotekey) {
     die "Usage: $0 --login <login> --remotekey <remotekey> [--output <output dir>]\n\nObtain your remote key on your Checkvist profile page\n";
@@ -31,7 +32,9 @@ my $lists_res_arc   = $chv->get('checklists.json',
 my $tar = Archive::Tar->new();
 for my $list (@{$lists_res->parse_response},
                 @{$lists_res_arc->parse_response}) {
-    say "Fetching $list->{name}";
+    if (!$no_log) {
+        say "Fetching $list->{name}";
+    }
     my $data = $chv->get("checklists/$list->{id}.opml", {
             export_status   => 'true',
             export_notes    => 'true',
